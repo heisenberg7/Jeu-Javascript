@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+
+	<title>Image In Game - Bobs</title>
+	<style>
+		canvas { width: 800px; height: 595px; }
+	</style>
+</head>
+<body>
+
+<h1>Bobs</h1>
+<p>This is an example page to show as simple is the implementation of &laquo; Image In Game &raquo;</p>
+<ul>
+	<li>Move Bob 1 with arrows : <span style="font-size: 1.5em">&uarr; &rarr; &darr; &larr;</span></li>
+	<li>Move Bob 2 with WASD (or ZQSD for azerty keyboards) :</li>
+</ul>
+<canvas id="canvas" width="800" height="595"></canvas>
+
+<script src="../build/IIG.min.js"></script>
+<script>
+	
+	if (!window.requestAnimationFrame) {
+		window.requestAnimationFrame = (function() {
+			return window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.oRequestAnimationFrame ||
+				window.msRequestAnimationFrame ||
+				function (callback, element) {
+					window.setTimeout(callback, 1000/60);
+				};
+		})();
+	}
+
+	var canvas = document.getElementById('canvas'),
+		ctx = canvas.getContext('2d');
+
+	var IM = new IIG.ImageManager();
+
+	IM.add(
+		'img/bob.png',
+		'img/gem.png',
+		'img/grass.png',
+		'img/tree.png'
+	);
+
+	IM.loadAll(init);
+
+	/**
+	 * Initialization
+	 **/
+	var grasses = [], gems = [], trees = [], player1, player2, grass, bob, bob2;
+	function init() {
+
+		// Get an instance
+		bob = IM.getInstance('img/bob');
+		bob.animation = new IIG.Animation({
+			sWidth : 48,
+			sHeight : 64,
+			sx : 48,
+			sy : 64 * 2,
+			animByFrame : 7,
+			alternate : true
+		});
+
+		// Get another instance
+		bob2 = IM.getInstance('img/bob');
+		bob2.animation = new IIG.Animation({
+			sWidth : 48,
+			sHeight : 64,
+			sx : 48,
+			sy : 64 * 2,
+			animByFrame : 7,
+			alternate : true
+		});
+
+		// Creating grass blocs
+		grass = IM.getInstance('img/grass');
+		var nbX = Math.ceil(canvas.width / grass.width),
+			nbY = Math.ceil(canvas.height / (grass.height-24));
+
+		for (var i = 0; i < nbX; i++) {
+			for (var j = 0; j < nbY; j++) {
+				grasses.push({
+					image : grass,
+					x : i * grass.width,
+					y : j * (grass.height-24)
+				});
+			}
+		}
+
+		// Creating some trees
+		var tree = IM.getInstance('img/tree'),
+			nb = Math.ceil(3 + Math.random() * (7-3));
+		for (var i = 0; i < nb; i++) {
+			trees.push({
+				image : tree,
+				x : Math.random() * canvas.width,
+				y : Math.random() * canvas.height
+			});
+		}
+
+		// Creating some gems
+		var gem = IM.getInstance('img/gem'),
+			nb = Math.ceil(Math.random() * 4);
+		for (var i = 0; i < nb; i++) {
+			gems.push({
+				image : gem,
+				x : Math.random() * canvas.width,
+				y : Math.random() * canvas.height
+			});
+		}
+
+		// Creating player Bob
+		player1 = {
+			image : bob,
+			x : canvas.width - 48,
+			y : canvas.height - 64,
+			width : 48,
+			height : 64,
+			speed : 3
+		};
+
+		player2 = {
+			image : bob2,
+			x : 0,
+			y : 0,
+			width : 48,
+			height : 64,
+			speed : 3
+		};
+
+		// All is ready, let's run !
+		run();
+	}
+
+	/**
+	 * Animation
+	 **/
+	function animate() {
+
+		movePlayer(player1, KEYBOARD.up, KEYBOARD.bottom, KEYBOARD.right, KEYBOARD.left);
+		movePlayer(player2, KEYBOARD.w, KEYBOARD.s, KEYBOARD.d, KEYBOARD.a);
+
+	}
+
+	function movePlayer(player, up, bottom, right, left) {
+
+		if (up) {
+			player.image.animation.pauseAnimation = false;
+			player.image.animation.sy = 0;
+			if (player.y > 0)
+				player.y -= player.speed;
+		}
+
+		if (bottom) {
+			player.image.animation.pauseAnimation = false;
+			player.image.animation.sy = player.image.animation.sHeight * 2;
+			if (player.y + player.height < canvas.height)
+				player.y += player.speed;
+		}
+
+		if (right) {
+			player.image.animation.pauseAnimation = false;
+			player.image.animation.sy = player.image.animation.sHeight;
+			if (player.x + player.width < canvas.width)
+				player.x += player.speed;
+		}
+
+		if (left) {
+			player.image.animation.pauseAnimation = false;
+			player.image.animation.sy = player.image.animation.sHeight * 3;
+			if (player.x > 0)
+				player.x -= player.speed;
+		}
+
+		if (!up && !right && !bottom && !left) {
+			// If no key are pressed, the animation pauses because Bob stops moving.
+			player.image.animation.pauseAnimation = true;
+			// Set manually 'sx' to middle state
+			player.image.animation.sx = player.image.animation.sWidth;
+		}
+
+	}
+
+	/**
+	 * Rendering
+	 **/
+	function render() {
+
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		// Grass blocs
+		for (var i = 0, c = grasses.length; i < c; i++) {
+			var g = grasses[i];
+			ctx.drawImage(g.image.data, g.x, g.y);
+		}
+
+		// Trees
+		for (var i = 0, c = trees.length; i < c; i++) {
+			var t = trees[i];
+			ctx.drawImage(t.image.data, t.x, t.y);
+		}
+
+		// Gems
+		for (var i = 0, c = gems.length; i < c; i++) {
+			var g = gems[i];
+			ctx.drawImage(g.image.data, g.x, g.y);
+		}
+
+		// Player 1
+		IM.drawImage(ctx, player1.image, player1.x, player1.y);
+		// Player 2
+		IM.drawImage(ctx, player2.image, player2.x, player2.y);
+
+	}
+
+	/**
+	 * Game Loop
+	 **/
+
+	function run() {
+		IM.update();
+
+		animate();
+		render();
+
+		requestAnimationFrame(run);
+	}
+
+	/**
+	 * Keyboard events
+	 **/
+
+	var KEYBOARD = {
+		up : false,
+		right : false,
+		bottom : false,
+		left : false,
+		w : false,
+		d : false,
+		s : false,
+		a : false
+	};
+
+	document.onkeydown = function(evt) {
+		KEYBOARD.up = evt.keyCode === 38 ? true : KEYBOARD.up;
+		KEYBOARD.right = evt.keyCode === 39 ? true : KEYBOARD.right;
+		KEYBOARD.bottom = evt.keyCode === 40 ? true : KEYBOARD.bottom;
+		KEYBOARD.left = evt.keyCode === 37 ? true : KEYBOARD.left;
+		KEYBOARD.w = evt.keyCode === 87 || evt.keyCode === 90 ? true : KEYBOARD.w;
+		KEYBOARD.d = evt.keyCode === 68 ? true : KEYBOARD.d;
+		KEYBOARD.s = evt.keyCode === 83 ? true : KEYBOARD.s;
+		KEYBOARD.a = evt.keyCode === 65 || evt.keyCode === 81 ? true : KEYBOARD.a;
+	}
+
+	document.onkeyup = function(evt) {
+		KEYBOARD.up = evt.keyCode === 38 ? false : KEYBOARD.up;
+		KEYBOARD.right = evt.keyCode === 39 ? false : KEYBOARD.right;
+		KEYBOARD.bottom = evt.keyCode === 40 ? false : KEYBOARD.bottom;
+		KEYBOARD.left = evt.keyCode === 37 ? false : KEYBOARD.left;
+		KEYBOARD.w = evt.keyCode === 87 || evt.keyCode === 90 ? false : KEYBOARD.w;
+		KEYBOARD.d = evt.keyCode === 68 ? false : KEYBOARD.d;
+		KEYBOARD.s = evt.keyCode === 83 ? false : KEYBOARD.s;
+		KEYBOARD.a = evt.keyCode === 65 || evt.keyCode === 81 ? false : KEYBOARD.a;
+	}
+
+</script>
+
+<p>&copy; jmpp / <a href="https://github.com/jmpp">github.com/jmpp</a> / <a href="https://twitter.com/_jmpp">twitter@_jmpp</a></p>
+
+
+</body>
+</html>

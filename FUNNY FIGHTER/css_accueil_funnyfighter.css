@@ -1,0 +1,143 @@
+mark
+	{
+	color: red;
+	text-decoration: underline;	
+	}
+	
+	
+.introduction 
+	{
+	background-color: silver;
+	padding: 5px;
+	margin-left: 15px;
+	margin-right: 15px;	
+	}
+	
+	
+#page
+	{
+	width: 510px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 25px 25px 25px 25px;
+	background-color: white  ;
+	border-style: double;
+	border-width: 1px;
+	border-color: silver;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	-webkit-box-shadow: inset 0px 0px 5px 10px gray;
+	-moz-box-shadow: inset 0px 0px 5px 10px gray;
+	-o-box-shadow: inset 0px 0px 5px 10px gray;
+	-ms-box-shadow: inset 0px 0px 5px 10px gray;
+	box-shadow: inset 0px 0px 5px 10px gray;
+	
+	}
+	
+	
+body
+	{
+	background-color: #C0C0C0 ;
+	font-family: 'Arial'; 
+	font-size: 15px;
+	}
+	
+	
+h2
+	{
+	text-align: center;
+	color: gray;
+	}
+	
+
+figure
+	{
+	text-align: center;
+	}
+
+figure > img
+	{
+	/*border: 7px solid silver;*/
+	}
+	
+.menu:after, .menu:before {
+	text-align: center;
+    margin-top:0.5em;
+    content: "";
+    float:left;
+    border:1.5em solid #fff;
+}
+
+.menu:after {
+    border-right-color:transparent;
+}
+
+.menu:before {
+    border-left-color:transparent;
+}
+
+.menu a:link, .menu a:visited { 
+	text-align: center;
+    color:#000;
+    text-decoration:none;
+    float:left;
+    height:3.5em;
+    overflow:hidden;
+}
+
+.menu span {
+	text-align: center;
+    background:#fff;
+    display:inline-block;
+    line-height:3em;
+    padding:0 1em;
+    margin-top:0.5em;
+    position:relative;
+
+    -webkit-transition: background-color 0.2s, margin-top 0.2s;  /* Saf3.2+, Chrome */
+    -moz-transition: background-color 0.2s, margin-top 0.2s;  /* FF4+ */
+    -ms-transition: background-color 0.2s, margin-top 0.2s;  /* IE10 */
+    -o-transition: background-color 0.2s, margin-top 0.2s;  /* Opera 10.5+ */
+    transition: background-color 0.2s, margin-top 0.2s;
+}
+
+.menu a:hover span {
+    background:#FFD204;
+    margin-top:0;
+}
+
+.menu span:before {
+    content: "";
+    position:absolute;
+    top:3em;
+    left:0;
+    border-right:0.5em solid #9B8651;
+    border-bottom:0.5em solid #fff;
+}
+
+.menu span:after {
+    content: "";
+    position:absolute;
+    top:3em;
+    right:0;
+    border-left:0.5em solid #9B8651;
+    border-bottom:0.5em solid #fff;
+}
+
+.play{
+	background-color:#FFFF00;
+	font: black;
+	display: block;
+	font-family :Rockwell Extra Bold;
+	text-align: center;
+	width: 200px;
+	height: 90px; 
+	cursor: pointer;
+	
+
+}
+
+
+

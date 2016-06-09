@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset=utf-8 />
+        <title>FUNNY FIGHTER</title>
+		
+		<style type="text/css">
+			body {  }
+			body, html { margin:0; }
+			canvas {
+				position: absolute;
+				background: url('img/background.jpg') no-repeat;
+				background-size: cover;
+				background-position-y: bottom;
+			}
+		</style>
+		
+		<script src="js/lib/IIG.js"></script>
+		<script src="js/lib/buzz.min.js"></script>
+		<script src="js/game.js"></script>
+		<script src="js/player.js"></script>
+		<script src="js/life.js"></script>
+		<script src="js/shoot.js"></script>
+		<script src="js/ennemies.js"></script>
+		<script src="js/events.js"></script>
+		<script src="js/timebar.js"></script>
+		<script src="js/score.js"></script>
+		<script src="js/sound.js"></script>
+		
+    </head>
+
+    <body>
+		<canvas id='c'></canvas>
+		
+		<script type="text/javascript">
+			var canvas = document.getElementById('c');
+			var ctx = canvas.getContext('2d');
+			var IM = new IIG.ImageManager();
+			
+			var config = {
+				SCREEN_WIDTH : window.innerWidth,
+				SCREEN_HEIGHT : window.innerHeight,
+				ROUND_TIME : 30000				
+			};
+			
+			canvas.width = config.SCREEN_WIDTH;
+			canvas.height = config.SCREEN_HEIGHT;
+			
+			playing = true;
+			var TIMING = 0;
+			
+			var game = new Game();
+			
+			var player = new Player();
+			var lifes = new LifesManager();
+			var shoot = new Shoot();
+			var enemies = new EnemiesManager();
+			var events = new Events();
+			var timebar = new TimeBar();
+			var score = new Score();
+									
+			function run( t )
+			{
+				if(playing){
+					TIMING = t;
+					game.update();
+					game.render();
+					
+					requestAnimationFrame(run);
+				}
+			}
+			
+			var keyboard = {
+			    left : false,
+			    right : false,
+			    space : false,
+				up : true
+			};
+			
+			game.init();
+
+			document.addEventListener('keydown', function(evt) {
+				keyboard.up = false;
+			    keyboard.left = evt.keyCode === 37 ? true : keyboard.left;
+			    keyboard.right = evt.keyCode === 39 ? true : keyboard.right;
+			    keyboard.space = evt.keyCode === 32 ? true : keyboard.space;
+			}, false);
+
+			document.addEventListener('keyup', function(evt) {
+				player.shotAllow = true;
+				keyboard.up = true;
+			    keyboard.left = evt.keyCode === 37 ? false : keyboard.left;
+			    keyboard.right = evt.keyCode === 39 ? false : keyboard.right;
+			    keyboard.space = evt.keyCode === 32 ? false : keyboard.space;
+			}, false);
+			
+			setInterval(function(){
+				for(var i=0; i<events.events.length; i++){
+					events.events.splice(i, 1)
+				}
+			},1500);
+			
+		</script>
+    </body>
+</html>
